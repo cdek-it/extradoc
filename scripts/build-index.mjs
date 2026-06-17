@@ -1,5 +1,6 @@
 import { readFile, writeFile, readdir } from "node:fs/promises";
 import { join, sep } from "node:path";
+import { pathToFileURL } from "node:url";
 import matter from "gray-matter";
 
 export const CATEGORIES = [
@@ -24,8 +25,22 @@ export async function listMarkdownFiles(docsDir) {
   return out;
 }
 
+// Plain-text version of a markdown body for full-text search (markdown
+// syntax stripped). Keeps words, drops punctuation/markup.
+export function toSearchText(markdown) {
+  return markdown
+    .replace(/```[\s\S]*?```/g, " ") // fenced code blocks
+    .replace(/`([^`]*)`/g, "$1") // inline code
+    .replace(/!\[([^\]]*)\]\([^)]*\)/g, "$1") // images -> alt
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, "$1") // links -> text
+    .replace(/<[^>]+>/g, " ") // html tags (iframes etc.)
+    .replace(/[#>*_~`|]/g, " ") // markdown punctuation
+    .replace(/\s+/g, " ") // collapse whitespace
+    .trim();
+}
+
 export function entryFromFile(filePath, raw) {
-  const { data } = matter(raw);
+  const { data, content } = matter(raw);
   const path = filePath.split(sep).join("/");
   const parts = path.split("/");
   const fallbackCategory = parts[1] ?? "";
@@ -40,6 +55,8 @@ export function entryFromFile(filePath, raw) {
     tags: data.tags,
     description: data.description,
     cover: data.cover,
+    popularity: data.popularity,
+    searchText: toSearchText(content),
   };
 }
 
@@ -58,6 +75,8 @@ async function main() {
   console.log(`index.json: ${entries.length} docs`);
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+// pathToFileURL handles special characters in the path (e.g. `[`/`]` in a
+// folder name) that a raw `file://` + argv concatenation would mis-encode.
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   await main();
 }

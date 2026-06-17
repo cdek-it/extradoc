@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { entryFromFile, buildIndex, CATEGORIES } from "./build-index.mjs";
+import { entryFromFile, buildIndex, toSearchText, CATEGORIES } from "./build-index.mjs";
 
 test("entryFromFile парсит frontmatter и выводит путь с прямыми слэшами", () => {
   const raw = [
@@ -31,6 +31,33 @@ test("entryFromFile подставляет slug и category из пути при
   const entry = entryFromFile("docs/tokens/color.md", "---\ntitle: Color\n---\n");
   assert.equal(entry.slug, "color");
   assert.equal(entry.category, "tokens");
+});
+
+test("entryFromFile добавляет popularity и searchText из тела", () => {
+  const raw = [
+    "---",
+    "title: Button",
+    "popularity: 100",
+    "---",
+    "# Button",
+    "",
+    "Текст с `кодом` и [ссылкой](https://x.com).",
+    "",
+  ].join("\n");
+  const entry = entryFromFile("docs/components/button.md", raw);
+  assert.equal(entry.popularity, 100);
+  assert.match(entry.searchText, /Button Текст с кодом и ссылкой/);
+  assert.doesNotMatch(entry.searchText, /[#`\[\]()]/);
+});
+
+test("toSearchText убирает разметку, картинки и html, оставляя слова", () => {
+  const md = "# Заголовок\n\n![alt текст](a.png)\n\n```js\nconst x=1;\n```\n\n<iframe src=\"x\"></iframe>\n\nОбычный **жирный** текст.";
+  const text = toSearchText(md);
+  assert.match(text, /Заголовок/);
+  assert.match(text, /alt текст/);
+  assert.match(text, /Обычный жирный текст/);
+  assert.doesNotMatch(text, /const x=1/); // код-блок вырезан
+  assert.doesNotMatch(text, /iframe/);
 });
 
 test("buildIndex собирает фиксированные категории и переданный generatedAt", () => {
