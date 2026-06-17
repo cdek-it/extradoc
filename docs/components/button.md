@@ -18,16 +18,24 @@ popularity: 100
 - **Доступность:** PrimeNG ✅ · PrimeVue ✅ · PrimeReact ➖ · React Native 📱 ➖
 - **Figma:** `<Button.Base>` `node-id=160:5223` (+ `<Button.Danger/Info/Warning/Success>`)
 
-![Анатомия кнопки](assets/button-anatomy.png)
-
 ---
 
-## 🎨 Для дизайнеров
+## 📋 Общее (для всех)
+
+### Overview / Назначение
+Кнопка инициирует действие пользователя: submit формы, подтверждение, переход к следующему шагу. Отличается от ссылки (`<Link>`) тем, что меняет состояние/данные, а не навигирует. Поддерживает текст, иконку (prefix/postfix), бейдж и режим загрузки.
 
 ### Анатомия
 Части: **корневой контейнер** (bg, border, radius) · **label** · **иконка** (prefix/postfix) · **спиннер** (loading) · **badge** (опционально). В режиме `icon-only` остаётся только иконка (квадратная кнопка).
 
-### Варианты
+![Анатомия кнопки](assets/button-anatomy.png)
+
+### Когда использовать / не использовать
+**✅ Использовать:** для действия (submit, переход к шагу, подтверждение); `primary` — главное действие на экране (одно); `secondary`/`text`/`link` — второстепенные.
+
+**❌ Не использовать:** для навигации без действия (берите ссылку `<Link>`); несколько `primary` рядом — теряется иерархия.
+
+### Варианты (variants)
 Severity вынесена в отдельные component-set'ы; остальные оси — внутри каждого (`<Button.Base>` = 960 вариантов).
 
 | Свойство | Значения | Назначение |
@@ -42,16 +50,6 @@ Severity вынесена в отдельные component-set'ы; остальн
 
 ¹ `xlarge` есть только в Figma; в API PrimeNG отсутствует (см. «Отличия дизайн ↔ код»).
 
-### Размеры
-Значения из Figma (px):
-
-| Размер | Высота | Padding (V/H) | Gap | Radius | Шрифт (size/line) |
-|---|---|---|---|---|---|
-| `small` | 30 | 7 / 10.5 | 7 | 10.5 | 12.25 / 15.31 |
-| `base` | 35 | 7 / 14 | 7 | 10.5 | 14 / 21 |
-| `large` | 49 | 14 / 21 | 10.5 | 14 | 17.5 / 22 |
-| `xlarge`¹ | — | — | — | — | через класс `.p-button-xlg` |
-
 ### Состояния
 | Состояние | Что меняется визуально |
 |---|---|
@@ -61,6 +59,36 @@ Severity вынесена в отдельные component-set'ы; остальн
 | focus | Фокус-кольцо вокруг контейнера |
 | disabled | Приглушённый фон, `pointer-events: none` |
 | loading | Спиннер (заменяет контент или перед ним) |
+
+### Best practices (do / don't)
+| ✅ Do | ❌ Don't |
+|---|---|
+| Один `primary` на экран — главное действие | Несколько `primary` рядом |
+| Глагол действия в label («Получить код») | Размытые формулировки («OK», «Кнопка») |
+| Ссылку — для навигации без изменения данных | Кнопку вместо ссылки для перехода |
+| Для `icon-only` задавать `ariaLabel` | Иконка без текстовой альтернативы |
+
+### Content / UX-writing
+- Тон: глагол + объект, без точки в конце («Получить код», «Отправить заявку»).
+- Длина: коротко, в идеале 1–3 слова; избегать переноса на 2 строки.
+- Капитализация: Sentence case.
+- Локализация: учитывать расширение строк (DE/RU длиннее) и RTL.
+
+---
+
+## 🎨 Для дизайнеров
+
+### Размеры (visual specs)
+Значения из Figma (px):
+
+| Размер | Высота | Padding (V/H) | Gap | Radius | Шрифт (size/line) |
+|---|---|---|---|---|---|
+| `small` | 30 | 7 / 10.5 | 7 | 10.5 | 12.25 / 15.31 |
+| `base` | 35 | 7 / 14 | 7 | 10.5 | 14 / 21 |
+| `large` | 49 | 14 / 21 | 10.5 | 14 | 17.5 / 22 |
+| `xlarge`¹ | — | — | — | — | через класс `.p-button-xlg` |
+
+¹ `xlarge` есть только в Figma; в API PrimeNG отсутствует (см. «Отличия дизайн ↔ код»).
 
 ### Дизайн-токены (семантический слой)
 Роль кнопки действия → группа `color.action.*`. Выбирайте токен по роли, не по цвету (`DESIGNER-GUIDE.md`).
@@ -77,10 +105,14 @@ Severity вынесена в отдельные component-set'ы; остальн
 - Шрифт: **TT Fellows**, DemiBold (600); base = 14/21px.
 - Иконки: **Tabler** (`ti ti-*`) — основной набор; местами PrimeIcons (`pi pi-*`).
 
-### Когда использовать / не использовать
-**✅ Использовать:** для действия (submit, переход к шагу, подтверждение); `primary` — главное действие на экране (одно); `secondary`/`text`/`link` — второстепенные.
+### Layout / размещение
+- Группа кнопок: gap по токену spacing; `primary` — правее/первым по приоритету.
+- Ширина: по контенту (hug) либо `fluid` — на всю ширину контейнера.
+- В формах кнопка submit выравнивается по правому краю (или на всю ширину на мобильном).
 
-**❌ Не использовать:** для навигации без действия (берите ссылку `<Link>`); несколько `primary` рядом — теряется иерархия.
+### Figma / UI Kit
+- Component set: `<Button.Base>` `node-id=160:5223`.
+- Severity-сеты: `<Button.Danger/Info/Warning/Success>`.
 
 ### Доступность (визуальная)
 - Контраст белого текста на `green.500` ≥ 4.5:1.
@@ -159,10 +191,6 @@ import { CdekButton } from '@/components/base-button';
 - ARIA: `ariaLabel` (обязателен для `icon-only`), `tabindex`, `autofocus`.
 - Клавиатура: активация по `Enter` / `Space` (нативное поведение `<button>`).
 
-### Тесты / Storybook
-- Angular: `src/stories/components/button/button.stories.ts` + `examples/` (base, sizes, icon, loading, severity, outlined, text, rounded, disabled, badge, extra).
-- Vue: `src/components/base-button/BaseButton.stories.js`, тесты — `BaseButton.test.ts`.
-
 ### Отличия дизайн ↔ код
 | Аспект | PrimeNG (`extra-button`) | Vue (`CdekButton`) |
 |---|---|---|
@@ -173,4 +201,16 @@ import { CdekButton } from '@/components/base-button';
 
 > ⚠️ `size="xlarge"` есть в Figma, но **отсутствует в API PrimeNG** (задаётся классом `p-button-xlg`) — зафиксировано в описаниях Figma-компонентов. В PrimeNG `severity="warning"` маппится на `warn`.
 
-> **PrimeReact / React Native 📱:** локальных репозиториев нет — заполнить по официальной доке PrimeUI при добавлении поддержки.
+### PrimeReact / React Native 📱
+> Локальных репозиториев нет — заполнить по официальной доке PrimeUI при добавлении поддержки.
+
+### Тесты / Storybook
+- Angular: `src/stories/components/button/button.stories.ts` + `examples/` (base, sizes, icon, loading, severity, outlined, text, rounded, disabled, badge, extra).
+- Vue: `src/components/base-button/BaseButton.stories.js`, тесты — `BaseButton.test.ts`.
+
+---
+
+## 🕓 Version history / Changelog
+| Версия | Дата | Изменение |
+|---|---|---|
+| 1.0.0 | 2026-06-17 | Реструктуризация под аудиторные слои (общее / дизайнеры / разработчики) |
