@@ -2,7 +2,7 @@
 title: Button
 category: components
 slug: button
-figmaNames: ["Button"]
+figmaNames: ["Button", "<Button.Base>", "Button.Base"]
 tags: [actions, form]
 description: Основная кнопка действия
 ---

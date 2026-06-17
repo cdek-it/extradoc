@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-17T09:21:24.832Z",
+  "generatedAt": "2026-06-17T11:00:41.946Z",
   "categories": [
     {
       "id": "components",
@@ -21,7 +21,9 @@
       "category": "components",
       "path": "docs/components/button.md",
       "figmaNames": [
-        "Button"
+        "Button",
+        "<Button.Base>",
+        "Button.Base"
       ],
       "tags": [
         "actions",
