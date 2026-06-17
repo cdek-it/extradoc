@@ -1,0 +1,55 @@
+{
+  "generatedAt": "2026-06-17T09:21:24.832Z",
+  "categories": [
+    {
+      "id": "components",
+      "title": "Компоненты"
+    },
+    {
+      "id": "design-patterns",
+      "title": "Дизайн-паттерны"
+    },
+    {
+      "id": "tokens",
+      "title": "Токены"
+    }
+  ],
+  "docs": [
+    {
+      "slug": "button",
+      "title": "Button",
+      "category": "components",
+      "path": "docs/components/button.md",
+      "figmaNames": [
+        "Button"
+      ],
+      "tags": [
+        "actions",
+        "form"
+      ],
+      "description": "Основная кнопка действия"
+    },
+    {
+      "slug": "empty-states",
+      "title": "Пустые состояния",
+      "category": "design-patterns",
+      "path": "docs/design-patterns/empty-states.md",
+      "tags": [
+        "pattern",
+        "ux"
+      ],
+      "description": "Как показывать экраны без данных"
+    },
+    {
+      "slug": "color",
+      "title": "Цвета",
+      "category": "tokens",
+      "path": "docs/tokens/color.md",
+      "tags": [
+        "tokens",
+        "color"
+      ],
+      "description": "Палитра и семантические цвета"
+    }
+  ]
+}
